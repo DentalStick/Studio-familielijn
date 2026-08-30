@@ -1,5 +1,3 @@
-"script.js"
-
 // Automatisch het huidige jaar in de footer zetten
 
 document.getElementById("year").textContent =
@@ -39,3 +37,37 @@ document.querySelectorAll(".nav a").forEach(link => {
     });
 
 });
+
+
+// =====================================================
+// DOORLOPENDE LIJN: teken de lijn mee met het scrollen
+// =====================================================
+
+const continuousLine = document.querySelector(".continuous-line path");
+
+if (continuousLine) {
+
+    const lineLength = continuousLine.getTotalLength();
+
+    continuousLine.style.strokeDasharray = lineLength;
+    continuousLine.style.strokeDashoffset = lineLength;
+
+    const drawLine = () => {
+
+        const scrollTop = window.scrollY;
+        const documentHeight =
+            document.documentElement.scrollHeight - window.innerHeight;
+
+        const progress = documentHeight > 0
+            ? Math.min(1, Math.max(0, scrollTop / documentHeight))
+            : 0;
+
+        continuousLine.style.strokeDashoffset =
+            lineLength * (1 - progress);
+    };
+
+    window.addEventListener("scroll", drawLine, { passive: true });
+    window.addEventListener("resize", drawLine);
+
+    drawLine();
+}
